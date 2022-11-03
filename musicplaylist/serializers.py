@@ -12,8 +12,6 @@ class PlayListSerializer(serializers.ModelSerializer):
         model = PlayList
         fields = '__all__'
 
-
-
 class PlayListRecommendCreateSerializer(serializers.ModelSerializer):
     playlist_user = serializers.SerializerMethodField()
 
@@ -25,20 +23,19 @@ class PlayListRecommendCreateSerializer(serializers.ModelSerializer):
         fields = ("playlist_select_musics", "playlist_user")
 
 
-
 class PlayListCustomSerializer(serializers.ModelSerializer):
-    user = serializers.SerializerMethodField()
-    playlist_likes_count = serializers.SerializerMethodField()
+    playlist_user = serializers.SerializerMethodField()
+    playlist_likes = serializers.SerializerMethodField()
 
-    def get_user(self, obj):
-        return obj.user.email
+    def get_playlist_user(self, obj):
+        return obj.playlist_user.id
 
-    def get_likes_count(self, obj):
+    def get_playlist_likes(self, obj):
         return obj.playlist_likes.count()
 
     class Meta:
         model = PlayList
-        fields = ("pk", "playlist_title", "playlist_select_musics", "playlist_update_at", "playlist_user", "playlist_likes_count")
+        fields = ("pk", "playlist_title", "playlist_select_musics", "playlist_update_at", "playlist_user", "playlist_likes")
 
 
 

@@ -55,15 +55,15 @@ class MusicPlayListUserRecommended(APIView):
 # 3. 유저 커스텀 플레이 리스트
 class PlayListview(APIView):
     def get(self, request):
-        articles = PlayList.objects.all( )
-        serializer = PlayListCustomSerializer(articles, many=True)
+        playlist = PlayList.objects.all( )
+        serializer = PlayListCustomSerializer(playlist, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         serializer = PlayListCreateSerializer(data=request.data)
 
         if serializer.is_valid():
-            serializer.save(user = request.user)
+            serializer.save(playlist_user = request.user)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -74,14 +74,14 @@ class PlayListview(APIView):
 class PlayListDetailview(APIView):
     # 본인 게시글 가져오기
     def get(self, request, playlist_id):
-        article = get_object_or_404(PlayList, id=playlist_id)
-        serializer = PlayListCustomSerializer(article)
+        playlist = get_object_or_404(PlayList, id=playlist_id)
+        serializer = PlayListCustomSerializer(playlist)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, playlist_id):
-        article = get_object_or_404(PlayList, id=playlist_id)
-        if request.user == article.user:
-            serializer = PlayListCreateSerializer(article, data=request.data)
+        playlist = get_object_or_404(PlayList, id=playlist_id)
+        if request.user == playlist.playlist_user:
+            serializer = PlayListCreateSerializer(playlist, data=request.data)
 
             if serializer.is_valid():
                 serializer.save()
@@ -94,9 +94,10 @@ class PlayListDetailview(APIView):
 
 
     def delete(self, request, playlist_id):
-        article = get_object_or_404(PlayList, id=playlist_id)
-        if request.user == article.user:
-            article.delete()
+        playlist = get_object_or_404(PlayList, id=playlist_id)
+        print(playlist.playlist_user)
+        if request.user == playlist.playlist_user:
+            playlist.delete()
             return Response("삭제 완료", status=status.HTTP_204_NO_CONTENT)
         else:
             return Response("권한이 없습니다", status=status.HTTP_403_FORBIDDEN)
