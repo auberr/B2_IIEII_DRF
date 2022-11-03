@@ -1,23 +1,52 @@
 from rest_framework import serializers
-from musicplaylist.models import Music, MusicPlayList
+from musicplaylist.models import Music, PlayList
 
 class MusicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Music
         fields = '__all__'
         
-
-class MusicPlayListSerializer(serializers.ModelSerializer):
+        
+class PlayListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = MusicPlayList
+        model = PlayList
         fields = '__all__'
 
-class MusicPlayListCreateSerializer(serializers.ModelSerializer):
-    music_playlist_user = serializers.SerializerMethodField()
 
-    def get_music_playlist_user(self, obj):
-        return obj.music_playlist_user.id
+
+class PlayListRecommendCreateSerializer(serializers.ModelSerializer):
+    playlist_user = serializers.SerializerMethodField()
+
+    def get_playlist_user(self, obj):
+        return obj.playlist_user.id
 
     class Meta:
-        model = MusicPlayList
-        fields = ("music_playlist_song", "music_playlist_user")
+        model = PlayList
+        fields = ("playlist_select_musics", "playlist_user")
+
+
+
+class PlayListCustomSerializer(serializers.ModelSerializer):
+    user = serializers.SerializerMethodField()
+    playlist_likes_count = serializers.SerializerMethodField()
+
+    def get_user(self, obj):
+        return obj.user.email
+
+    def get_likes_count(self, obj):
+        return obj.playlist_likes.count()
+
+    class Meta:
+        model = PlayList
+        fields = ("pk", "playlist_title", "playlist_select_musics", "playlist_update_at", "playlist_user", "playlist_likes_count")
+
+
+
+class PlayListCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PlayList
+        fields = ("playlist_title", "playlist_select_musics","playlist_content")
+
+
+
+

@@ -13,9 +13,18 @@ class Music(models.Model):
         return str(self.music_title)
     
 
-class MusicPlayList(models.Model):
-    music_playlist_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    music_playlist_song = models.ManyToManyField(Music, related_name='music')
+class PlayList(models.Model):
+    playlist_user = models.ForeignKey(User, on_delete=models.CASCADE)
+    playlist_select_musics = models.ManyToManyField(Music, related_name='select_musics_set')
+    playlist_title = models.CharField(max_length=50, null=True)
+    playlist_content = models.TextField(null=True)
+    
+    playlist_create_at = models.DateTimeField(auto_now_add=True)
+    playlist_update_at = models.DateTimeField(auto_now=True)
+
+    playlist_likes = models.ManyToManyField(User, related_name="playlist_likes_set")
 
     def __str__(self):
-        return str(self.music_playlist_user)
+        return str(self.playlist_title)
+
+
