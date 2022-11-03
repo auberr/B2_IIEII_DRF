@@ -3,10 +3,9 @@ from django.contrib.auth.models import User # 나중에 커스텀 유저를 사�
 
 # Create your models here.
 class Music(models.Model):
-    music_user = models.ForeignKey(User, on_delete=models.CASCADE)
-    music_artist = models.CharField(max_length=25)
-    music_title = models.CharField(max_length=255)
-    music_genre = models.CharField(max_length=25)
+    music_artist = models.CharField(max_length=25, default='')
+    music_title = models.CharField(max_length=255, default='')
+    music_genre = models.CharField(max_length=25, default='')
     # music_img = models.ImageField(null=True, upload_to='images/', blank=True, editable=True)
 
     def __str__(self):
