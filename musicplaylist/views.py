@@ -4,7 +4,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from musicplaylist.models import Music, PlayList
-from musicplaylist.serializers import MusicSerializer, PlayListCustomSerializer, PlayListRecommendedSerializer, PlayListRecommendCreateSerializer, PlayListCreateSerializer
+from musicplaylist.serializers import MusicSerializer, PlayListCustomSerializer, PlayListRecommendedSerializer, PlayListRecommendCreateSerializer, PlayListCreateSerializer, MusicTestSerializer
 from drf_yasg.utils import swagger_auto_schema
 import pandas as pd
 from musicplaylist.models import Music
@@ -47,17 +47,32 @@ class MusicListview(APIView):
             return dbtest_musics.iloc[final_index]
 
         similar_music = recommend_music_list(dbtest_musics_pandas, similarity_genre,'우린 그렇게 사랑해서')
-        similar_music_01 = similar_music[['music_title','similarity']]
-        print(similar_music_01)
+        similar_music_01 = similar_music[['id', 'music_title','music_artist', 'music_genre']]
+        print(similar_music_01['id'])
+        similar_lists =similar_music_01['id']
+        
+        similar_music_list = []
+        for i in similar_lists:
+            similar_music_list.append(i)
+        print(similar_music_list)
 
-        musics = Music.objects.all( )
-        serializer = MusicSerializer(musics, many=True)
+        user_musicplaylist_create_serializer = MusicTestSerializer(data = {"playlist_select_musics":similar_music_list})
 
+        if user_musicplaylist_create_serializer.is_valid(): 
+            print(2)
+            user_musicplaylist_create_serializer.save(playlist_user=request.user)
+            return Response(user_musicplaylist_create_serializer.data, status=status.HTTP_201_CREATED)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        # musics = Music.objects.all( )
+        # serializer = MusicSerializer(musics, many=True)
+        # serializer = MusicTestSerializer(similar_music_list, many=True)
+
+        return Response({"playlist_select_musics":similar_music_list}, status=status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        serializer = MusicSerializer(data=request.data)
+
+        
+        serializer = PlayListRecommendCreateSerializer(data=request.data)
 
         if serializer.is_valid():
             serializer.save()

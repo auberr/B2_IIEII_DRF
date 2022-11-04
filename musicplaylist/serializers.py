@@ -7,6 +7,17 @@ class MusicSerializer(serializers.ModelSerializer):
         model = Music
         fields = '__all__'
    
+# 테스트용  Seriazlier
+
+class MusicTestSerializer(serializers.ModelSerializer):
+    playlist_user = serializers.SerializerMethodField()
+
+    def get_playlist_user(self, obj):
+        return obj.playlist_user.id
+
+    class Meta:
+        model = PlayList
+        fields = ("playlist_select_musics", "playlist_user")
 
 
 # 1. API - 선호하는 음악 선택에서 플레이리스트 create 만드는 것
