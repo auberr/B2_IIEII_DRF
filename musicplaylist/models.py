@@ -24,6 +24,9 @@ class PlayList(models.Model):
 
     playlist_likes = models.ManyToManyField(User, related_name="playlist_likes_set")
 
+    is_main = models.BooleanField(default = False)
+    is_main_recom = models.BooleanField(default = False)
+
     def __str__(self):
         return str(self.playlist_title)
 
