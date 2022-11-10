@@ -35,11 +35,30 @@ window.onload = async function loadMylist() {
         my_list.appendChild(my_music)
         my_list.appendChild(img)
     });
+
+    // 동적으로 input 값을 넣어서 생성하는 javascript code 
+    const title_input = document.getElementById('titleinput')
+    const my_title_input = document.createElement("input")
+    my_title_input.setAttribute("value", response_json.playlist_title)
+    my_title_input.setAttribute("class", "form-control")
+    my_title_input.setAttribute("id", "title_input_update_box")
+    title_input.appendChild(my_title_input)
+    
+    const content_input = document.getElementById('contentinput')
+    const my_content_input = document.createElement("input")
+    my_content_input.setAttribute("value", response_json.playlist_content)
+    my_content_input.setAttribute("class", "form-control")
+    my_content_input.setAttribute("id", "content_input_update_box")
+    content_input.appendChild(my_content_input)
+
+
+
+
 }
 
 async function edit_playlist() {
     const token = localStorage.getItem('access')
-    const title = document.getElementById("title").value
+    const title = document.getElementById("title_input_update_box").value
     const content = document.getElementById("content").value
     console.log(title, content)
 
